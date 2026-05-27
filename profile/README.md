@@ -26,49 +26,29 @@ It's designed to fit two workflows:
 
 ## Install
 
-### Option 1 — Binary
-
-Pick the tarball for your platform from [Releases](https://github.com/ss-ayan/ayan/releases/latest):
-
-```bash
-VERSION=v4.0.15
-OS=$(uname -s | tr A-Z a-z)
-ARCH=$(uname -m | sed 's/x86_64/amd64/')
-curl -L "https://github.com/ss-ayan/ayan/releases/download/${VERSION}/ayan-${VERSION}-${OS}-${ARCH}.tar.gz" \
-  | tar -xz -C /tmp
-sudo install /tmp/ayan /usr/local/bin/ayan
-ayan version
-```
-
-Windows users: download the `.zip` from the Releases page and add `ayan.exe` to `PATH`.
-
-### Option 2 — Docker
+ayan ships as a Docker image. Pull from `ghcr.io/ss-ayan/ayan` and wrap it with a thin shell shim so `ayan <subcommand>` works seamlessly:
 
 ```bash
 docker pull ghcr.io/ss-ayan/ayan:latest
-docker run --rm ghcr.io/ss-ayan/ayan:latest version
+docker run --rm ghcr.io/ss-ayan/ayan:latest version    # smoke test
 
-# Wrap it so `ayan` works seamlessly against your current dir:
-cat > /usr/local/bin/ayan <<'SH'
+# Wrap so `ayan` runs against your current directory:
+sudo tee /usr/local/bin/ayan > /dev/null <<'SH'
 #!/bin/bash
 exec docker run --rm -i \
   -v "$PWD:/workspace" -w /workspace \
   -v "$HOME/.claude:/root/.claude" \
   --entrypoint ayan ghcr.io/ss-ayan/ayan:latest "$@"
 SH
-chmod +x /usr/local/bin/ayan
+sudo chmod +x /usr/local/bin/ayan
+ayan version
 ```
 
 The `--entrypoint ayan` override is required because the image's default entrypoint runs the webhook server (`ayan-server`); the CLI binary lives at `/usr/local/bin/ayan` inside the image.
 
-### Option 3 — `go install` (if you have Go 1.25+)
+The `~/.claude` mount lets the containerized binary use your existing Claude Code subscription via the host's `claude` CLI auth state.
 
-```bash
-go install github.com/ss-ayan/ayan/cmd/cli@latest
-ayan version
-```
-
-Requires read access to the repo (clone via SSH if the repo is private to you).
+To pin to a specific version, swap `:latest` for `:v4.0.16` (or whichever tag you want).
 
 ## Install the Claude Code plugin
 
