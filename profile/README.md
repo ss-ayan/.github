@@ -38,15 +38,15 @@ sudo tee /usr/local/bin/ayan > /dev/null <<'SH'
 exec docker run --rm -i \
   -v "$PWD:/workspace" -w /workspace \
   -v "$HOME/.claude:/root/.claude" \
-  --entrypoint ayan ghcr.io/ss-ayan/ayan:latest "$@"
+  ghcr.io/ss-ayan/ayan:latest "$@"
 SH
 sudo chmod +x /usr/local/bin/ayan
 ayan version
 ```
 
-The `--entrypoint ayan` override is required because the image's default entrypoint runs the webhook server (`ayan-server`); the CLI binary lives at `/usr/local/bin/ayan` inside the image.
-
 The `~/.claude` mount lets the containerized binary use your existing Claude Code subscription via the host's `claude` CLI auth state.
+
+Self-hosted deployment? See the `service` repo — its compose/k8s manifests explicitly set `entrypoint: ayan-server` to run the webhook receiver. The image's default is the CLI.
 
 To pin to a specific version, swap `:latest` for `:v4.0.16` (or whichever tag you want).
 
