@@ -1,0 +1,8 @@
+#!/bin/sh
+# Rejects AI attribution lines in commit messages.
+# Enable once per clone: git config core.hooksPath .githooks
+
+if grep -v '^#' "$1" | grep -qiE '^co-authored-by:.*(claude|anthropic)|generated with \[?claude code|claude\.com/claude-code'; then
+    echo "commit-msg: remove AI attribution lines (Co-Authored-By: Claude / Generated with Claude Code)" >&2
+    exit 1
+fi
