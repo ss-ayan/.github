@@ -6,7 +6,7 @@ AI code review for local changes and GitHub PRs. Parallel analyzers check for id
 |---|---|
 | [`ayan`](https://github.com/ss-ayan/ayan) | The bot: CLI, webhook server, Docker image |
 | [`pragmatic-review`](https://github.com/ss-ayan/pragmatic-review) | Claude Code plugin that drives the CLI |
-| [`service`](https://github.com/ss-ayan/service) | Self-hosted server deployment (Fly, Render, Docker) |
+| [`service`](https://github.com/ss-ayan/service) | Self-hosted server deployment (Docker) |
 | [`github-app`](https://github.com/ss-ayan/github-app) | GitHub App manifest |
 
 ## Install
